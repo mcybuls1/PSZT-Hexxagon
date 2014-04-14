@@ -15,6 +15,7 @@ const char Model::BLUE = 2;
 const unsigned char Model::LASTING = 0;
 const unsigned char Model::WON = 1;
 const unsigned char Model::LOST = 2;
+const unsigned char Model::DRAW = 3;
 
 const char Model::CLONE = 1;
 const char Model::MOVE = 2;
@@ -226,6 +227,7 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
         ++reds;
     }
     changedFields.push_back(Field(p.second.getRow(), p.second.getColumn(), EMPTY, RED));
+    board[p.second.getRow()][p.second.getColumn()] = RED;
     for(char i = -1; i <= 1; ++i)
     {
         if((p.second.getRow() + i >= 0) && (p.second.getRow() + i < N_ROWS))
@@ -249,7 +251,6 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
         }
     }
     end = analyze(changedField);
-
     view->update(changedFields, reds, blues);
     if(end)
     {
@@ -257,12 +258,56 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
         return;
     }
 
-    /* Komunikacja z AI, otzymanie polecenia ruchu (klonowanie/przesuniecie) z A do B */
+    DataPack dp;
+
+    /* Komunikacja z AI, otzymanie polecenia ruchu (klonowanie/przesuniecie) z A do B
+       Polecenie wpisane do zmiennej typu DataPack */
 
     changedFields.clear();
 
-    /* 14.04; 03:25;  Na dzisiaj koniec bo juz kurwa nie daje rady */
-
+    if((dp.getActionCode() != CLONE) && (dp.getActionCode() != MOVE))
+    {
+        throw invalid_argument("Model::action()\nactionCode can be only Model::CLONE or Model::MOVE\n");
+    }
+    if(dp.getActionCode() == MOVE)
+    {
+        changedFields.push_back(Field(dp.getChange().first.getRow(), dp.getChange().first.getColumn(), BLUE, EMPTY));
+        board[dp.getChange().first.getRow()][dp.getChange().first.getColumn()] = EMPTY;
+    }
+    if(dp.getActionCode() == CLONE)
+    {
+        ++blues;
+    }
+    changedFields.push_back(Field(dp.getChange().second.getRow(), dp.getChange().second.getColumn(), EMPTY, BLUE));
+    board[dp.getChange().second.getRow()][dp.getChange().second.getColumn()] = BLUE;
+    for(char i = -1; i <= 1; ++i)
+    {
+        if((dp.getChange().second.getRow() + i >= 0) && (dp.getChange().second.getRow() + i < N_ROWS))
+        {
+            for(char j = -1; j <= 1; ++j)
+            {
+                if((dp.getChange().second.getColumn() + j >= 0) && (dp.getChange().second.getColumn() + j < N_COLUMNS))
+                {
+                    if(i != -j)
+                    {
+                        if(board[dp.getChange().second.getRow() + i][dp.getChange().second.getColumn() + j] == RED)
+                        {
+                            changedFields.push_back(Field(dp.getChange().second.getRow() + i, dp.getChange().second.getColumn() + j, RED, BLUE));
+                            board[dp.getChange().second.getRow() + i][dp.getChange().second.getColumn() + j] = BLUE;
+                            ++blues;
+                            --reds;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    end = analyze(changedFields);
+    view->update(changedFields, reds, blues);
+    if(end)
+    {
+        view->gameOver(gameState);
+    }
 }
 
 unsigned char Model::getReds(void) const
@@ -273,4 +318,73 @@ unsigned char Model::getReds(void) const
 unsigned char Model::getBlues(void) const
 {
     return blues;
+}
+
+bool Model::analyze(vector<Field>& v)
+{
+    pair<vector<Field>, vector<Field> > p;
+    unsigned char movableReds = 0;
+    unsigned char movableBlues = 0;
+    for(unsigned char i = 0; i < N_ROWS; ++i)
+    {
+        for(unsigned char j = 0; j < N_COLUMNS; ++j)
+        {
+            if((board[i][j] == RED) || (board[i][j] == BLUE))
+            {
+                p = getAvailbleFields(Field(i, j));
+                if((!p.first.empty()) || (!p.second.empty()))
+                {
+                    if(board[i][j] == RED)
+                    {
+                        ++movableReds;
+                    }
+                    else
+                    {
+                        ++movableBlues;
+                    }
+                }
+            }
+        }
+    }
+    if(((movableReds == 0) && (movableBlues != 0)) || ((movableBlues == 0) && (movableReds != 0)))
+    {
+        for(unsigned char i = 0; i < N_ROWS; ++i)
+        {
+            for(unsigned char j = 0; j < N_COLUMNS; ++i)
+            {
+                if(board[i][j] == EMPTY)
+                {
+                    if(movableReds == 0)
+                    {
+                        v.push_back(Field(i, j, EMPTY, BLUE));
+                        ++blues;
+                        board[i][j] = BLUE;
+                    }
+                    else
+                    {
+                        v.push_back(Field(i, j, EMPTY, RED));
+                        ++reds;
+                        board[i][j] = RED;
+                    }
+                }
+            }
+        }
+    }
+    if(reds + blues == N_FIELDS)
+    {
+        if(reds > blues)
+        {
+            gameState = WON;
+        }
+        else if(reds < blues)
+        {
+            gameState = LOST;
+        }
+        else
+        {
+            gameState = DRAW;
+        }
+        return true;
+    }
+    return false;
 }

@@ -33,6 +33,7 @@ public:
     const static unsigned char LASTING;
     const static unsigned char WON;
     const static unsigned char LOST;
+    const static unsigned char DRAW;
 
     const static char CLONE;
     const static char MOVE;
