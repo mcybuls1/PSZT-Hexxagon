@@ -2,6 +2,7 @@
 #define MODEL_H
 
 #include "Field.h"
+#include "mainwindow.h"
 #include <vector>
 #include <utility>
 
@@ -10,7 +11,7 @@ class Model
 public:
     Model(void);
     ~Model(void);
-    void setView(View*);
+    void setView(MainWindow*);
     void setAI(AIModule*);
     bool isClickable(const Field&);
     std::pair<std::vector<Field>, std::vector<Field> > getAvailbleFields(const Field&);
@@ -41,7 +42,7 @@ public:
 private:
     char** board;
     unsigned char gameState;
-    View* view;
+    MainWindow* view;
     AIModule* ai;
     unsigned char reds;
     unsigned char blues;

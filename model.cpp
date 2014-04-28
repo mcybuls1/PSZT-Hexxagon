@@ -35,10 +35,11 @@ Model::~Model(void)
         delete [] board[i];
     }
     delete [] board;
+    board = 0;
     view = ai = 0;
 }
 
-void Model::setView(View* view)
+void Model::setView(MainWindow* view)
 {
     this->view = view;
 }
