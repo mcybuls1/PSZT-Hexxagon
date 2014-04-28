@@ -14,15 +14,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    #model.cpp \
-    #Field.cpp \
-    #DataPack.cpp
+    model.cpp \
+    Field.cpp \
+    DataPack.cpp \
     fielditem.cpp
 
 HEADERS  += mainwindow.h \
-    #model.h \
-    #Field.h \
-    #DataPack.h
+    model.h \
+    Field.h \
+    DataPack.h \
     fielditem.h
 
 FORMS    += mainwindow.ui

@@ -39,7 +39,7 @@ public:
     const static char MOVE;
 
 private:
-    char board[N_ROWS][N_COLUMNS];
+    char** board;
     unsigned char gameState;
     View* view;
     AIModule* ai;
@@ -47,7 +47,7 @@ private:
     unsigned char blues;
 
     void init(void);
-    bool analyze(vector<Field>&);
+    bool analyze(std::vector<Field>&);
 
 };
 

@@ -24,11 +24,17 @@ const unsigned char Model::N_FIELDS = 58;
 
 Model::Model(void) : ai(0), view(0)
 {
+    board = 0;
     init();
 }
 
 Model::~Model(void)
 {
+    for(unsigned char i = 0; i < N_ROWS; ++i)
+    {
+        delete [] board[i];
+    }
+    delete [] board;
     view = ai = 0;
 }
 
@@ -184,9 +190,18 @@ char** Model::reset(void)
 
 void Model::init(void)
 {
-    gameState(LASTING);
+    gameState = LASTING;
     reds = 3;
     blues = 3;
+
+    if(board == 0)
+    {
+        board = new char*[N_ROWS];
+        for(unsigned char i = 0; i < N_ROWS; ++i)
+        {
+            board[i] = new char[N_COLUMNS];
+        }
+    }
 
     for(unsigned char i = 0; i < N_ROWS; ++i)
     {
@@ -250,7 +265,7 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
             }
         }
     }
-    end = analyze(changedField);
+    end = analyze(changedFields);
     view->update(changedFields, reds, blues);
     if(end)
     {

@@ -8,22 +8,22 @@ Field::Field(unsigned char row, unsigned char column, char oldV, char newV)
     newValue = newV;
 }
 
-unsigned char Field::getRow(void) const
+char Field::getRow(void) const
 {
     return row;
 }
 
-void Field::setRow(unsigned char newRow)
+void Field::setRow(char newRow)
 {
     row = newRow;
 }
 
-unsigned char Field::getColumn(void) const
+char Field::getColumn(void) const
 {
     return column;
 }
 
-void Field::setColumn(unsigned char newColumn) const
+void Field::setColumn(char newColumn)
 {
     column = newColumn;
 }
