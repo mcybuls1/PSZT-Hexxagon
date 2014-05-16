@@ -60,8 +60,8 @@ public:
      */
     unsigned char getBlues(void) const;
 
-    const static unsigned char N_ROWS = 9;
-    const static unsigned char N_COLUMNS = 9;
+    const static unsigned char N_ROWS;
+    const static unsigned char N_COLUMNS;
 
     const static unsigned char N_FIELDS;
 

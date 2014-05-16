@@ -1,11 +1,16 @@
 #include "model.h"
 #include "Field.h"
 #include "DataPack.h"
+#include "Board.h"
 #include <vector>
 #include <utility>
 #include <stdexcept>
+#include <limits>
 
 using namespace std;
+
+const unsigned char N_ROWS = 9;
+const unsigned char N_COLUMNS = 9;
 
 const char Model::FORBIDDEN = -1;
 const char Model::EMPTY = 0;
@@ -273,6 +278,20 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
         view->gameOver(gameState);
         return;
     }
+
+    char** temp = new char*[N_ROWS];
+    for(unsigned char i = 0; i < N_ROWS; ++i)
+    {
+        temp[i] = new char[N_COLUMNS];
+    }
+    for(unsigned char i = 0; i < N_ROWS; ++i)
+    {
+        for(unsigned char j = 0; j < N_COLUMNS; ++j)
+        {
+            temp[i][j] = board[i][j];
+        }
+    }
+    Board b(temp, N_ROWS, N_COLUMNS, numeric_limits<short>::min(), BLUE);
 
     DataPack dp;
 

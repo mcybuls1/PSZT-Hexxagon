@@ -17,12 +17,14 @@ SOURCES += main.cpp\
     model.cpp \
     Field.cpp \
     DataPack.cpp \
-    fielditem.cpp
+    fielditem.cpp \
+    Board.cpp
 
 HEADERS  += mainwindow.h \
     model.h \
     Field.h \
     DataPack.h \
-    fielditem.h
+    fielditem.h \
+    Board.h
 
 FORMS    += mainwindow.ui
