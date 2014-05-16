@@ -12,7 +12,7 @@ public:
     Model(void);
     ~Model(void);
     void setView(MainWindow*);
-    void setAI(AIModule*);
+    //void setAI(AIModule*);
 
     /*!
      * \brief Zwraca informację czy dane pole można kliknąć.
@@ -46,7 +46,9 @@ public:
      * Drugi parametr to para pól. Pierwsze to te, z którego wykonano ruch.
      * Drugie to te, na które wykonano ruch.
      */
-    void action(char, const std::pair<Field, Field>&);
+    void action(char, char, const std::pair<Field, Field>&);
+
+    void action(char, const std::pair<Field,Field>&);
 
     /*!
      * \brief Zwraca ilość czerwonych.
@@ -82,7 +84,7 @@ private:
     char** board;
     unsigned char gameState;
     MainWindow* view;
-    AIModule* ai;
+    //AIModule* ai;
     unsigned char reds;
     unsigned char blues;
 
