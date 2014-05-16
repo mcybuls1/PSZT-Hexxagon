@@ -48,6 +48,13 @@ public:
      */
     void action(char, char, const std::pair<Field, Field>&);
 
+    /*!
+     * \brief Dokonanie ruchu.
+     * Pierwszy parametr określa kto się rusza (BLUE albo RED).
+     * Drugi parametr określa rodzaj ruchu (sklonowanie lub przeskok).
+     * Trzeci parametr to para pól. Pierwsze to te, z którego wykonano ruch.
+     * Drugie to te, na które wykonano ruch.
+     */
     void action(char, const std::pair<Field,Field>&);
 
     /*!
