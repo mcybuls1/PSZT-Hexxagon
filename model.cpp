@@ -44,7 +44,7 @@ Model::~Model(void)
     view = /*ai =*/ 0;
 }
 
-void Model::setView(QWidget* view)
+void Model::setView(MainWindow* view)
 {
     this->view = view;
 }

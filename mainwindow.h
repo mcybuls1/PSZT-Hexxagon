@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+class Model;
+
 #include <QMainWindow>
 #include <QtCore>
 #include <QtGui>
@@ -28,7 +30,7 @@ private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
     FieldItem *board[9][9];
-    Model model;
+    Model* model;
 
 protected slots:
     void startGame();

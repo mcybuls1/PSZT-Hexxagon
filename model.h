@@ -1,6 +1,8 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+class MainWindow;
+
 #include "Field.h"
 #include "mainwindow.h"
 #include <vector>
