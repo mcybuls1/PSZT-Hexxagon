@@ -10,7 +10,8 @@ class FieldItem : public QGraphicsPolygonItem
 {
 public:
     QRectF boundingRect();
-    FieldItem();
+    FieldItem(char state);
+    void setState(char state);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 protected:
@@ -19,7 +20,7 @@ protected:
 
 private:
     //0 - wolny, 1 - gracza, 2 - komputera
-    int stan;
+    char state;
     QPolygonF polygon;
 
 };

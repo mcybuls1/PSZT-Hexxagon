@@ -5,9 +5,9 @@ QRectF FieldItem::boundingRect()
     return QRectF(0, 0, 80, 60);
 }
 
-FieldItem::FieldItem() : QGraphicsPolygonItem()
+FieldItem::FieldItem(char stan) : QGraphicsPolygonItem()
 {
-    stan = 0;
+    this->state = stan;
     QPolygonF *Triangle = new QPolygonF();
     Triangle->append(QPointF(0, 30));
     Triangle->append(QPointF(20, 0));
@@ -20,6 +20,11 @@ FieldItem::FieldItem() : QGraphicsPolygonItem()
     setPolygon(*Triangle);
     setFlag(QGraphicsItem::ItemIsMovable);
 
+}
+
+void FieldItem::setState(char state)
+{
+    this->state = state;
 }
 
 void FieldItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
