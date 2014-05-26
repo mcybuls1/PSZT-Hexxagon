@@ -19,7 +19,9 @@ SOURCES += main.cpp\
     DataPack.cpp \
     fielditem.cpp \
     Board.cpp \
-    gamescene.cpp
+    gamescene.cpp \
+    State.cpp \
+    AIModule.cpp
 
 HEADERS  += mainwindow.h \
     model.h \

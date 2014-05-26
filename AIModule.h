@@ -8,7 +8,7 @@
 class AIModule
 {
 public:
-    DataPack getMove(Board&);
+    DataPack getMove(Board*);
 
 private:
     short alphaBeta(State*, short);
