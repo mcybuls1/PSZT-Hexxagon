@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     Field.cpp \
     DataPack.cpp \
     fielditem.cpp \
-    Board.cpp
+    Board.cpp \
+    gamescene.cpp
 
 HEADERS  += mainwindow.h \
     model.h \
@@ -27,6 +28,7 @@ HEADERS  += mainwindow.h \
     fielditem.h \
     Board.h \
     AIModule.h \
-    State.h
+    State.h \
+    gamescene.h
 
 FORMS    += mainwindow.ui

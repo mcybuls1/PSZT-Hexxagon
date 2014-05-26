@@ -2,15 +2,14 @@
 #define MAINWINDOW_H
 
 class Model;
+class GameScene;
 
 #include <QMainWindow>
 #include <QtCore>
 #include <QtGui>
-#include <QGraphicsScene>
-#include "fielditem.h"
 #include "Field.h"
-#include "model.h"
 #include <vector>
+#include "gamescene.h"
 
 namespace Ui {
 class MainWindow;
@@ -28,9 +27,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QGraphicsScene *scene;
-    FieldItem *board[9][9];
-    Model* model;
+    GameScene *scene;
+
 
 protected slots:
     void startGame();
