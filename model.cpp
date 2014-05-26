@@ -1,4 +1,5 @@
 #include "model.h"
+#include "AIModule.h"
 #include "Field.h"
 #include "DataPack.h"
 #include "Board.h"
@@ -27,7 +28,7 @@ const char Model::MOVE = 2;
 
 const unsigned char Model::N_FIELDS = 58;
 
-Model::Model(void) : /*ai(0),*/ view(0)
+Model::Model(void) : ai(0), view(0)
 {
     board = 0;
     init();
@@ -41,7 +42,8 @@ Model::~Model(void)
     }
     delete [] board;
     board = 0;
-    view = /*ai =*/ 0;
+    view = 0;
+    ai = 0;
 }
 
 void Model::setView(MainWindow* view)
@@ -49,10 +51,10 @@ void Model::setView(MainWindow* view)
     this->view = view;
 }
 
-/*void Model::setAI(AIModule* aim)
+void Model::setAI(AIModule* aim)
 {
     ai = aim;
-}*/
+}
 
 bool Model::isClickable(const Field& f)
 {
@@ -291,7 +293,7 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
             temp[i][j] = board[i][j];
         }
     }
-    Board b(temp, N_ROWS, N_COLUMNS, numeric_limits<short>::min(), BLUE);
+    Board b(temp, N_ROWS, N_COLUMNS, BLUE, RED);
 
     /*DataPack dp;
 

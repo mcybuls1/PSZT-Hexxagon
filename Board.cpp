@@ -7,12 +7,13 @@
 
 using namespace std;
 
-Board::Board(char** tab, unsigned char nRows, unsigned char nColumns, short initialValue, unsigned char mover)
+Board::Board(char** tab, unsigned char nRows, unsigned char nColumns, unsigned char mover, unsigned char oponent)
 {
     rows = nRows;
     columns = nColumns;
-    value = initialValue;
+    value = 0;
     this->mover = mover;
+    this->oponent = oponent;
     board = tab;
 }
 
@@ -100,6 +101,11 @@ unsigned char Board::getColumns(void) const
 unsigned char Board::getMover(void) const
 {
     return mover;
+}
+
+unsigned char Board::getOponent(void) const
+{
+    return oponent;
 }
 
 void Board::computeValue(void)
@@ -282,4 +288,18 @@ char** Board::applyMove(const DataPack& move)
         }
     }
     return temp;
+}
+
+void Board::fill(void)
+{
+    for(unsigned char i = 0; i < rows; ++i)
+    {
+        for(unsigned char j = 0; j < columns; ++j)
+        {
+            if(board[i][j] == Model::EMPTY)
+            {
+                board[i][j] = oponent;
+            }
+        }
+    }
 }

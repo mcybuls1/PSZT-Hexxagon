@@ -25,6 +25,8 @@ HEADERS  += mainwindow.h \
     Field.h \
     DataPack.h \
     fielditem.h \
-    Board.h
+    Board.h \
+    AIModule.h \
+    State.h
 
 FORMS    += mainwindow.ui

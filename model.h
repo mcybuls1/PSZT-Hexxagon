@@ -5,6 +5,7 @@ class MainWindow;
 
 #include "Field.h"
 #include "mainwindow.h"
+#include "AIModule.h"
 #include <vector>
 #include <utility>
 
@@ -14,7 +15,7 @@ public:
     Model(void);
     ~Model(void);
     void setView(MainWindow*);
-    //void setAI(AIModule*);
+    void setAI(AIModule*);
 
     /*!
      * \brief Zwraca informację czy dane pole można kliknąć.
@@ -93,7 +94,7 @@ private:
     char** board;
     unsigned char gameState;
     MainWindow* view;
-    //AIModule* ai;
+    AIModule* ai;
     unsigned char reds;
     unsigned char blues;
 

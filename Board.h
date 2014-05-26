@@ -7,18 +7,20 @@
 class Board
 {
 public:
-    Board(char**, unsigned char, unsigned char, short, unsigned char);
+    Board(char**, unsigned char, unsigned char, unsigned char, unsigned char);
     Board(const Board&);
     ~Board(void);
     Board& operator=(const Board&);
-    char** getBoard() const;
-    short getValue() const;
-    unsigned char getRows() const;
-    unsigned char getColumns() const;
-    unsigned char getMover() const;
-    void computeValue();
-    std::vector<DataPack> getTransitions() const;
+    char** getBoard(void) const;
+    short getValue(void) const;
+    unsigned char getRows(void) const;
+    unsigned char getColumns(void) const;
+    unsigned char getMover(void) const;
+    unsigned char getOponent(void) const;
+    void computeValue(void);
+    std::vector<DataPack> getTransitions(void) const;
     char** applyMove(const DataPack&);
+    void fill(void);
 
 private:
     char** board;
@@ -26,6 +28,7 @@ private:
     unsigned char columns;
     short value;
     unsigned char mover;
+    unsigned char oponent;
 };
 
 #endif
