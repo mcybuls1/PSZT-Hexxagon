@@ -28,7 +28,7 @@ void MainWindow::gameOver(unsigned char gs)
 
 void MainWindow::update(std::vector<Field> changedFields, unsigned char reds, unsigned char blues)
 {
-
+//    scene->updateFields(changedFields, reds, blues);
 }
 
 MainWindow::~MainWindow()

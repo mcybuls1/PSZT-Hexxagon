@@ -53,6 +53,16 @@ FieldItem* GameScene::getField(int i, int j)
     return board[i][j];
 }
 
+void GameScene::updateFields(std::vector<Field> changedFields, unsigned char reds, unsigned char blues)
+{
+//    for (int i = 0; i < changedFields.size(); ++i)
+//    {
+//       Field field = changedFields[i];
+//       qDebug() << field.getNewValue();
+//       board[(int)field.getRow()][(int)field.getColumn()]->setState(field.getNewValue());
+//    }
+}
+
 void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsScene::mousePressEvent(event);
@@ -106,5 +116,14 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         from->setState(Model::EMPTY);
         clearSelections();
     }
+    //Zsynchronizowanie stanu z modelem
+    for (int i = 0; i < Model::N_ROWS; ++i)
+    {
+        for (int j = 0; j < Model::N_COLUMNS; ++j)
+        {
+            board[i][j]->setState(model->getBoard()[i][j]);
+        }
+    }
+
     view->viewport()->update();
 }

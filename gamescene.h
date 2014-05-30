@@ -14,6 +14,7 @@ public:
     void newGame();
     void clearSelections();
     FieldItem *getField(int i, int j);
+    void updateFields(std::vector<Field> changedFields, unsigned char reds, unsigned char blues);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
