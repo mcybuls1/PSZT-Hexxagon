@@ -4,9 +4,6 @@
 #include "State.h"
 #include <limits>
 #include <vector>
-#include <iostream>
-#include <stdexcept>
-#include <cstdlib>
 
 using namespace std;
 
