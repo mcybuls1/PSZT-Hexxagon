@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const short AIModule::MAX_DEPTH = 6;
+const short AIModule::MAX_DEPTH = 2;
 
 DataPack AIModule::getMove(Board* board)
 {
@@ -21,6 +21,82 @@ DataPack AIModule::getMove(Board* board)
 
 short AIModule::alphaBeta(State* state, short depth)
 {
-    return 0;
+    if(depth == 0)
+    {
+        state->computeValue();
+        return state->getValue();
+    }
+    else
+    {
+        vector<DataPack> transitions = state->getBoard()->getTransitions();
+        if(transitions.empty() == true)
+        {
+            state->getBoard()->fill();
+            state->setTerminal(true);
+            state->computeValue();
+            return state->getValue();
+        }
+        else
+        {
+            long l = 0;
+            vector<State*> states;
+            for(vector<DataPack>::iterator i = transitions.begin(); i != transitions.end(); ++i)
+            {
+                if(state->getAlpha() >= state->getBeta())
+                {
+                    purge(states);
+                    break;
+                }
+                char** temp = state->getBoard()->applyMove(*i);
+                Board* b = new Board(temp, state->getBoard()->getRows(), state->getBoard()->getColumns(), state->getBoard()->getOponent(), state->getBoard()->getMover());
+                State* s;
+                if(state->getType() == State::MAXIMIZER)
+                {
+                    s = new State(b, numeric_limits<short>::max(), state->getAlpha(), state->getBeta(), State::MINIMIZER);
+                }
+                else
+                {
+                    s = new State(b, numeric_limits<short>::min(), state->getAlpha(), state->getBeta(), State::MAXIMIZER);
+                }
+                states.push_back(s);
+                short value = alphaBeta(s, depth - 1);
+                if(state->getType() == State::MAXIMIZER)
+                {
+                    if(value > state->getValue())
+                    {
+                        state->setValue(value);
+                        state->setID(l);
+                        state->setAlpha(value);
+                    }
+                }
+                else
+                {
+                    if(value < state->getValue())
+                    {
+                        state->setValue(value);
+                        state->setID(l);
+                        state->setBeta(value);
+                    }
+                }
+                ++l;
+            }
+            if(state->getType() == State::MAXIMIZER)
+            {
+                return state->getAlpha();
+            }
+            else
+            {
+                return state->getBeta();
+            }
+        }
+    }
 }
 
+void AIModule::purge(vector<State*>& v)
+{
+    for(vector<State*>::iterator i = v.begin(); i != v.end(); ++i)
+    {
+        delete *i;
+        *i = 0;
+    }
+}

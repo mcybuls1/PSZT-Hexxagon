@@ -288,16 +288,10 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
             temp[i][j] = board[i][j];
         }
     }
-    Board b(temp, N_ROWS, N_COLUMNS, BLUE, RED);
+    Board* b = new Board(temp, N_ROWS, N_COLUMNS, BLUE, RED);
     AIModule ai;
-
-    /*DataPack dp;
-
-     Komunikacja z AI, otzymanie polecenia ruchu (klonowanie/przesuniecie) z A do B
-       Polecenie wpisane do zmiennej typu DataPack
-
+    DataPack dp = ai.getMove(b);
     changedFields.clear();
-
     if((dp.getActionCode() != CLONE) && (dp.getActionCode() != MOVE))
     {
         throw invalid_argument("Model::action()\nactionCode can be only Model::CLONE or Model::MOVE\n");
@@ -340,7 +334,7 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
     if(end)
     {
         view->gameOver(gameState);
-    }*/
+    }
 }
 
 unsigned char Model::getReds(void) const

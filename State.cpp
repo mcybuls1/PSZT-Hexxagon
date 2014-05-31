@@ -18,6 +18,7 @@ State::State(Board* b, short initialValue, short initialAlpha, short initialBeta
 State::~State(void)
 {
     delete board;
+    board = 0;
 }
 
 void State::computeValue(void)
