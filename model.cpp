@@ -377,7 +377,7 @@ bool Model::analyze(vector<Field>& v)
     {
         for(unsigned char i = 0; i < N_ROWS; ++i)
         {
-            for(unsigned char j = 0; j < N_COLUMNS; ++i)
+            for(unsigned char j = 0; j < N_COLUMNS; ++j)
             {
                 if(board[i][j] == EMPTY)
                 {
@@ -414,79 +414,4 @@ bool Model::analyze(vector<Field>& v)
         return true;
     }
     return false;
-}
-
-/* Metoda do testow */
-void Model::action(char mover, char actionCode, const std::pair<Field, Field>& p)
-{
-    char opposite;
-    if(mover == RED)
-    {
-        opposite = BLUE;
-    }
-    else
-    {
-        opposite = RED;
-    }
-    vector<Field> changedFields;
-    bool end = false;
-    if((actionCode != CLONE) && (actionCode != MOVE))
-    {
-        throw invalid_argument("Model::action()\nactionCode can be only Model::CLONE or Model::MOVE\n");
-    }
-    if(actionCode == MOVE)
-    {
-        changedFields.push_back(Field(p.first.getRow(), p.first.getColumn(), mover, EMPTY));
-        board[p.first.getRow()][p.first.getColumn()] = EMPTY;
-    }
-    if(actionCode == CLONE)
-    {
-        if(mover == RED)
-        {
-            ++reds;
-        }
-        else
-        {
-            ++blues;
-        }
-    }
-    changedFields.push_back(Field(p.second.getRow(), p.second.getColumn(), EMPTY, mover));
-    board[p.second.getRow()][p.second.getColumn()] = mover;
-    for(char i = -1; i <= 1; ++i)
-    {
-        if((p.second.getRow() + i >= 0) && (p.second.getRow() + i < N_ROWS))
-        {
-            for(char j = -1; j <= 1; ++j)
-            {
-                if((p.second.getColumn() + j >= 0) && (p.second.getColumn() + j < N_COLUMNS))
-                {
-                    if(i != -j)
-                    {
-                        if(board[i + p.second.getRow()][j + p.second.getColumn()] == opposite)
-                        {
-                            changedFields.push_back(Field(i + p.second.getRow(), j + p.second.getColumn(), opposite, mover));
-                            board[p.second.getRow() + i][p.second.getColumn() + j] = mover;
-                            if(mover == RED)
-                            {
-                                ++reds;
-                                --blues;
-                            }
-                            else
-                            {
-                                ++blues;
-                                --reds;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    end = analyze(changedFields);
-    view->update(changedFields, reds, blues);
-    if(end)
-    {
-        view->gameOver(gameState);
-        return;
-    }
 }

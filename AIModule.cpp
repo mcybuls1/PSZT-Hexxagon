@@ -4,10 +4,13 @@
 #include "State.h"
 #include <limits>
 #include <vector>
+#include <iostream>
+#include <stdexcept>
+#include <cstdlib>
 
 using namespace std;
 
-const short AIModule::MAX_DEPTH = 2;
+const short AIModule::MAX_DEPTH = 4;
 
 DataPack AIModule::getMove(Board* board)
 {
@@ -44,7 +47,6 @@ short AIModule::alphaBeta(State* state, short depth)
             {
                 if(state->getAlpha() >= state->getBeta())
                 {
-                    purge(states);
                     break;
                 }
                 char** temp = state->getBoard()->applyMove(*i);
@@ -80,6 +82,7 @@ short AIModule::alphaBeta(State* state, short depth)
                 }
                 ++l;
             }
+            purge(states);
             if(state->getType() == State::MAXIMIZER)
             {
                 return state->getAlpha();
