@@ -65,7 +65,10 @@ short AIModule::alphaBeta(State* state, short depth)
                     {
                         state->setValue(value);
                         state->setID(l);
-                        state->setAlpha(value);
+                        if(state->getValue() > state->getAlpha())
+                        {
+                            state->setAlpha(state->getValue());
+                        }
                     }
                 }
                 else
@@ -74,7 +77,10 @@ short AIModule::alphaBeta(State* state, short depth)
                     {
                         state->setValue(value);
                         state->setID(l);
-                        state->setBeta(value);
+                        if(state->getValue() < state->getBeta())
+                        {
+                            state->setBeta(state->getValue());
+                        }
                     }
                 }
                 ++l;
