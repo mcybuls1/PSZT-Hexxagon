@@ -118,18 +118,17 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
     else if(selected->getSelection() == FieldItem::CLONEABLE)
     {
-
+        model->action(Model::CLONE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
         selected->setState(Model::RED);
         clearSelections();
-        model->action(Model::CLONE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
+
     }
     else if(selected->getSelection() == FieldItem::MOVABLE)
     {
-
+        model->action(Model::MOVE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
         selected->setState(Model::RED);
         from->setState(Model::EMPTY);
         clearSelections();
-        model->action(Model::MOVE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
     }
     //Zsynchronizowanie stanu z modelem
     for (int i = 0; i < Model::N_ROWS; ++i)
