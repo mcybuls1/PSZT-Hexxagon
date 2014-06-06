@@ -118,6 +118,11 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
     else if(selected->getSelection() == FieldItem::CLONEABLE)
     {
+        /*          KAAACPEERRR
+        Zrób 2 zmienne FieldItem sendFrom i sendSelected które będą kopiami from i selected
+        wykonaj kopie przed clearSelections(); a linijkę model->action(...); wstaw jako ostatnią i przed nią
+        spróbuj QThread::sleep(1);
+        */
         model->action(Model::CLONE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
         selected->setState(Model::RED);
         clearSelections();
@@ -125,6 +130,11 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
     else if(selected->getSelection() == FieldItem::MOVABLE)
     {
+        /*          KAAACPEERRR
+        Zrób 2 zmienne FieldItem sendFrom i sendSelected które będą kopiami from i selected
+        wykonaj kopie przed clearSelections(); a linijkę model->action(...); wstaw jako ostatnią i przed nią
+        spróbuj QThread::sleep(1);
+        */
         model->action(Model::MOVE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
         selected->setState(Model::RED);
         from->setState(Model::EMPTY);
