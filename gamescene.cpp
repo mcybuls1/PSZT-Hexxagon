@@ -14,6 +14,8 @@ GameScene::GameScene(QGraphicsView *view, QObject *parent) :
         }
     }
 
+    started = false;
+    model->setView(this);
     model = new Model();
     this->view = view;
 }
@@ -29,10 +31,15 @@ void GameScene::newGame()
             if(board[i][j]->getState() != Model::FORBIDDEN)
             {
                 board[i][j]->setPos( 220 + 60 * j, 130 + 60 * i - 30 * j);
+                if(!started)
+                {
                 this->addItem(board[i][j]);
+                }
             }
         }
     }
+    clearSelections();
+    started = true;
 }
 
 void GameScene::clearSelections()
@@ -53,14 +60,20 @@ FieldItem* GameScene::getField(int i, int j)
     return board[i][j];
 }
 
-void GameScene::updateFields(std::vector<Field> changedFields, unsigned char reds, unsigned char blues)
+void GameScene::update(std::vector<Field> changedFields, unsigned char reds, unsigned char blues)
 {
-//    for (int i = 0; i < changedFields.size(); ++i)
+//    for (unsigned int i = 0; i < changedFields.size(); ++i)
 //    {
 //       Field field = changedFields[i];
 //       qDebug() << field.getNewValue();
 //       board[(int)field.getRow()][(int)field.getColumn()]->setState(field.getNewValue());
 //    }
+//    view->viewport()->update();
+}
+
+void GameScene::gameOver(unsigned char gs)
+{
+
 }
 
 void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -105,16 +118,18 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
     else if(selected->getSelection() == FieldItem::CLONEABLE)
     {
-        model->action(Model::CLONE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
+
         selected->setState(Model::RED);
         clearSelections();
+        model->action(Model::CLONE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
     }
     else if(selected->getSelection() == FieldItem::MOVABLE)
     {
-        model->action(Model::MOVE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
+
         selected->setState(Model::RED);
         from->setState(Model::EMPTY);
         clearSelections();
+        model->action(Model::MOVE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
     }
     //Zsynchronizowanie stanu z modelem
     for (int i = 0; i < Model::N_ROWS; ++i)
@@ -125,5 +140,5 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         }
     }
 
-    view->viewport()->update();
+//    view->viewport()->update();
 }

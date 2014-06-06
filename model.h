@@ -1,7 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-class MainWindow;
+class GameScene;
 
 #include "Field.h"
 #include "mainwindow.h"
@@ -13,7 +13,7 @@ class Model
 public:
     Model(void);
     ~Model(void);
-    void setView(MainWindow*);
+    void setView(GameScene*);
 
     /*!
      * \brief Zwraca informację czy dane pole można kliknąć.
@@ -81,7 +81,7 @@ public:
 private:
     char** board;
     unsigned char gameState;
-    MainWindow* view;
+    GameScene* view;
     unsigned char reds;
     unsigned char blues;
 

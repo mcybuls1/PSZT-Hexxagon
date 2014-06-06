@@ -46,7 +46,7 @@ Model::~Model(void)
     view = 0;
 }
 
-void Model::setView(MainWindow* view)
+void Model::setView(GameScene* view)
 {
     this->view = view;
 }

@@ -14,7 +14,8 @@ public:
     void newGame();
     void clearSelections();
     FieldItem *getField(int i, int j);
-    void updateFields(std::vector<Field> changedFields, unsigned char reds, unsigned char blues);
+    void update(std::vector<Field> changedFields, unsigned char reds, unsigned char blues);
+    void gameOver(unsigned char gs);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -28,6 +29,7 @@ private:
     FieldItem *board[9][9];
     FieldItem *from;
     Model* model;
+    bool started;
 };
 
 #endif // GAMESCENE_H
