@@ -57,6 +57,12 @@ public:
      */
     unsigned char getBlues(void) const;
 
+    /*!
+     * \brief Zwraca aktualny stan gry
+     * \return Stan gry
+     */
+    unsigned char getGameState(void) const;
+
     const static unsigned char N_ROWS;
     const static unsigned char N_COLUMNS;
 

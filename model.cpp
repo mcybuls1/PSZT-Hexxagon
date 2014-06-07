@@ -341,6 +341,11 @@ unsigned char Model::getBlues(void) const
     return blues;
 }
 
+unsigned char Model::getGameState(void) const
+{
+    return gameState;
+}
+
 bool Model::analyze(void)
 {
     pair<vector<Field>, vector<Field> > p;
