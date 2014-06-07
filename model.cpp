@@ -227,17 +227,6 @@ void Model::init(void)
     }
 }
 
-void Model::action(char actionCode, const pair<Field, Field>& p)
-{
-    playerAction(actionCode, p);
-    bool end = analyze();
-    if(end)
-    {
-        return;
-    }
-    computerAction();
-}
-
 void Model::playerAction(char actionCode, const pair<Field, Field>& p)
 {
     if((actionCode != CLONE) && (actionCode != MOVE))
@@ -274,7 +263,7 @@ void Model::playerAction(char actionCode, const pair<Field, Field>& p)
             }
         }
     }
-    //analyze();
+    analyze();
 }
 
 void Model::computerAction(void)
