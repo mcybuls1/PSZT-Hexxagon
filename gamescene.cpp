@@ -1,4 +1,6 @@
 #include "gamescene.h"
+#include <QMessageBox>
+//#include <QString>
 
 GameScene::GameScene(QGraphicsView *view, QObject *parent) :
     QGraphicsScene(parent)
@@ -18,11 +20,32 @@ GameScene::GameScene(QGraphicsView *view, QObject *parent) :
     model->setView(this);
     model = new Model();
     this->view = view;
+
+    //s
+    computer = false;
 }
 
 void GameScene::newGame()
 {
     char** boardGiven = model->reset();
+
+    if(!started)
+    {
+        this->addSimpleText("Reds", QFont("Times", 16, QFont::Bold));
+        this->addSimpleText("Blues", QFont("Times", 16, QFont::Bold))->moveBy(930, 0);
+
+        redScore = this->addSimpleText(QString::number((int)model->getReds()), QFont("Times", 16, QFont::Bold));
+        redScore->moveBy(0, 20);
+
+        blueScore = this->addSimpleText(QString::number((int)model->getBlues()), QFont("Times", 16, QFont::Bold));
+        blueScore->moveBy(930, 20);
+    }
+    else
+    {
+        redScore->setText(QString::number((int)model->getReds()));
+        blueScore->setText(QString::number((int)model->getBlues()));
+    }
+
     for (int i = 0; i < Model::N_ROWS; ++i)
     {
         for (int j = 0; j < Model::N_COLUMNS; ++j)
@@ -38,6 +61,7 @@ void GameScene::newGame()
             }
         }
     }
+
     clearSelections();
     started = true;
 }
@@ -73,7 +97,53 @@ void GameScene::update(std::vector<Field> changedFields, unsigned char reds, uns
 
 void GameScene::gameOver(unsigned char gs)
 {
+    //
+}
 
+void GameScene::checkGameState()
+{
+    char state = model->getGameState();
+
+    if(state == Model::LASTING)
+    {
+        return;
+    }
+    else if(state == Model::LOST)
+    {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText("Przegrałeś!");
+        msgBox.setInformativeText("Czy chcesz rozpocząć nową grę?");
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::Yes);
+        int ret = msgBox.exec();
+        if(ret == QMessageBox::Yes)
+            newGame();
+    }
+    else if(state == Model::WON)
+    {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText("Wygrałeś!");
+        msgBox.setInformativeText("Czy chcesz rozpocząć nową grę?");
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::Yes);
+        int ret = msgBox.exec();
+        if(ret == QMessageBox::Yes)
+            newGame();
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText("Remis!");
+        msgBox.setInformativeText("Czy chcesz rozpocząć nową grę?");
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::Yes);
+        int ret = msgBox.exec();
+        if(ret == QMessageBox::Yes)
+            newGame();
+    }
 }
 
 void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -84,7 +154,6 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
     FieldItem* selected = (FieldItem*)selectedItems().back();
-    //selected->setSelection(FieldItem::SELECTED);
 
     if(selected->getSelection() == FieldItem::NONE)
     {
@@ -108,7 +177,6 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         foreach (Field field, response.second)
         {
             board[(int)field.getRow()][(int)field.getColumn()]->setSelection(FieldItem::MOVABLE);
-            //            qDebug() << (int)field.getRow();
         }
 
     }
@@ -118,28 +186,21 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
     else if(selected->getSelection() == FieldItem::CLONEABLE)
     {
-        /*          KAAACPEERRR
-        Zrób 2 zmienne FieldItem sendFrom i sendSelected które będą kopiami from i selected
-        wykonaj kopie przed clearSelections(); a linijkę model->action(...); wstaw jako ostatnią i przed nią
-        spróbuj QThread::sleep(1);
-        */
-        model->action(Model::CLONE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
+
+        model->playerAction(Model::CLONE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
         selected->setState(Model::RED);
         clearSelections();
-
+        computer = true;
     }
     else if(selected->getSelection() == FieldItem::MOVABLE)
     {
-        /*          KAAACPEERRR
-        Zrób 2 zmienne FieldItem sendFrom i sendSelected które będą kopiami from i selected
-        wykonaj kopie przed clearSelections(); a linijkę model->action(...); wstaw jako ostatnią i przed nią
-        spróbuj QThread::sleep(1);
-        */
-        model->action(Model::MOVE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
+        model->playerAction(Model::MOVE, std::make_pair<Field, Field> ((Field)*from, (Field)*selected));
         selected->setState(Model::RED);
         from->setState(Model::EMPTY);
         clearSelections();
+        computer = true;
     }
+
     //Zsynchronizowanie stanu z modelem
     for (int i = 0; i < Model::N_ROWS; ++i)
     {
@@ -149,5 +210,30 @@ void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         }
     }
 
-//    view->viewport()->update();
+    checkGameState();
+}
+
+void GameScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+
+    QGraphicsScene::mouseReleaseEvent(event);
+    checkGameState();
+    if(computer)
+    {
+        //QThread::sleep(1);
+        model->computerAction();
+        //Zsynchronizowanie stanu z modelem
+        for (int i = 0; i < Model::N_ROWS; ++i)
+        {
+            for (int j = 0; j < Model::N_COLUMNS; ++j)
+            {
+                board[i][j]->setState(model->getBoard()[i][j]);
+            }
+        }
+        redScore->setText(QString::number((int)model->getReds()));
+        blueScore->setText(QString::number((int)model->getBlues()));
+
+        computer = false;
+    }
+
 }

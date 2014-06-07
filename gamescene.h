@@ -16,9 +16,11 @@ public:
     FieldItem *getField(int i, int j);
     void update(std::vector<Field> changedFields, unsigned char reds, unsigned char blues);
     void gameOver(unsigned char gs);
+    void checkGameState();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 signals:
 
@@ -30,6 +32,9 @@ private:
     FieldItem *from;
     Model* model;
     bool started;
+    bool computer;
+    QGraphicsSimpleTextItem *redScore;
+    QGraphicsSimpleTextItem *blueScore;
 };
 
 #endif // GAMESCENE_H
