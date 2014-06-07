@@ -229,22 +229,29 @@ void Model::init(void)
 
 void Model::action(char actionCode, const pair<Field, Field>& p)
 {
-    vector<Field> changedFields;
-    bool end = false;
+    playerAction(actionCode, p);
+    bool end = analyze();
+    if(end)
+    {
+        return;
+    }
+    computerAction();
+}
+
+void Model::playerAction(char actionCode, const pair<Field, Field>& p)
+{
     if((actionCode != CLONE) && (actionCode != MOVE))
     {
         throw invalid_argument("Model::action()\nactionCode can be only Model::CLONE or Model::MOVE\n");
     }
     if(actionCode == MOVE)
     {
-        changedFields.push_back(Field(p.first.getRow(), p.first.getColumn(), RED, EMPTY));
         board[p.first.getRow()][p.first.getColumn()] = EMPTY;
     }
     if(actionCode == CLONE)
     {
         ++reds;
     }
-    changedFields.push_back(Field(p.second.getRow(), p.second.getColumn(), EMPTY, RED));
     board[p.second.getRow()][p.second.getColumn()] = RED;
     for(char i = -1; i <= 1; ++i)
     {
@@ -258,7 +265,6 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
                     {
                         if(board[i + p.second.getRow()][j + p.second.getColumn()] == BLUE)
                         {
-                            changedFields.push_back(Field(i + p.second.getRow(), j + p.second.getColumn(), BLUE, RED));
                             board[p.second.getRow() + i][p.second.getColumn() + j] = RED;
                             ++reds;
                             --blues;
@@ -268,14 +274,11 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
             }
         }
     }
-    end = analyze(changedFields);
-    view->update(changedFields, reds, blues);
-    if(end)
-    {
-        view->gameOver(gameState);
-        return;
-    }
+    //analyze();
+}
 
+void Model::computerAction(void)
+{
     char** temp = new char*[N_ROWS];
     for(unsigned char i = 0; i < N_ROWS; ++i)
     {
@@ -291,21 +294,18 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
     Board* b = new Board(temp, N_ROWS, N_COLUMNS, BLUE, RED);
     AIModule ai;
     DataPack dp = ai.getMove(b);
-    changedFields.clear();
     if((dp.getActionCode() != CLONE) && (dp.getActionCode() != MOVE))
     {
         throw invalid_argument("Model::action()\nactionCode can be only Model::CLONE or Model::MOVE\n");
     }
     if(dp.getActionCode() == MOVE)
     {
-        changedFields.push_back(Field(dp.getChange().first.getRow(), dp.getChange().first.getColumn(), BLUE, EMPTY));
         board[dp.getChange().first.getRow()][dp.getChange().first.getColumn()] = EMPTY;
     }
     if(dp.getActionCode() == CLONE)
     {
         ++blues;
     }
-    changedFields.push_back(Field(dp.getChange().second.getRow(), dp.getChange().second.getColumn(), EMPTY, BLUE));
     board[dp.getChange().second.getRow()][dp.getChange().second.getColumn()] = BLUE;
     for(char i = -1; i <= 1; ++i)
     {
@@ -319,7 +319,6 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
                     {
                         if(board[dp.getChange().second.getRow() + i][dp.getChange().second.getColumn() + j] == RED)
                         {
-                            changedFields.push_back(Field(dp.getChange().second.getRow() + i, dp.getChange().second.getColumn() + j, RED, BLUE));
                             board[dp.getChange().second.getRow() + i][dp.getChange().second.getColumn() + j] = BLUE;
                             ++blues;
                             --reds;
@@ -329,12 +328,7 @@ void Model::action(char actionCode, const pair<Field, Field>& p)
             }
         }
     }
-    end = analyze(changedFields);
-    view->update(changedFields, reds, blues);
-    if(end)
-    {
-        view->gameOver(gameState);
-    }
+    analyze();
 }
 
 unsigned char Model::getReds(void) const
@@ -347,7 +341,7 @@ unsigned char Model::getBlues(void) const
     return blues;
 }
 
-bool Model::analyze(vector<Field>& v)
+bool Model::analyze(void)
 {
     pair<vector<Field>, vector<Field> > p;
     unsigned char movableReds = 0;
@@ -383,13 +377,11 @@ bool Model::analyze(vector<Field>& v)
                 {
                     if(movableReds == 0)
                     {
-                        v.push_back(Field(i, j, EMPTY, BLUE));
                         ++blues;
                         board[i][j] = BLUE;
                     }
                     else
                     {
-                        v.push_back(Field(i, j, EMPTY, RED));
                         ++reds;
                         board[i][j] = RED;
                     }

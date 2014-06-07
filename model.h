@@ -14,24 +14,8 @@ public:
     Model(void);
     ~Model(void);
     void setView(GameScene*);
-
-    /*!
-     * \brief Zwraca informację czy dane pole można kliknąć.
-     * \return Informacja czy dane pole można kliknąć.
-     */
     bool isClickable(const Field&);
-
-    /*!
-     * \brief Zwraca zbiory pól, na które można wykonać ruch z danego pola.
-     * \return Para wektorów. Pierwszy zawiera pola, na które można się sklonować.
-     * Drugi zawiera pola, na które można przeskoczyć.
-     */
     std::pair<std::vector<Field>, std::vector<Field> > getAvailbleFields(const Field&);
-
-    /*!
-     * \brief Zwraca wskaźnik na tablicę.
-     * \return Wskaźnik na tablicę.
-     */
     char** getBoard(void) const;
 
     /*!
@@ -47,6 +31,19 @@ public:
      * Drugie to te, na które wykonano ruch.
      */
     void action(char, const std::pair<Field,Field>&);
+
+    /*!
+     * \brief Dokonanie ruchu gracza.
+     * Pierwszy parametr określa rodzaj ruchu (sklonowanie lub przeskok).
+     * Drugi parametr to para pól. Pierwsze to te, z którego wykonano ruch.
+     * Drugie to te, na które wykonano ruch.
+     */
+    void playerAction(char, const std::pair<Field, Field>&);
+
+    /*!
+     * \brief Dokonanie ruchu komputera
+     */
+    void computerAction(void);
 
     /*!
      * \brief Zwraca ilość czerwonych.
@@ -86,7 +83,7 @@ private:
     unsigned char blues;
 
     void init(void);
-    bool analyze(std::vector<Field>&);
+    bool analyze(void);
 
 };
 
